@@ -5,54 +5,52 @@ import { useNavigate } from 'react-router-dom';
 
 // importando context para usar seus props de routes.js
 import { UsuarioContext } from 'common/context/Usuario';
+import { useContext } from 'react';
 
 function Login() {
   const navigate = useNavigate();
+  const { nome, setNome, saldo, setSaldo } = useContext(UsuarioContext);
 
   return (
     <Container>
-      {/* O restante da estrutura do componente retorna dentro do contexto em uma arrow function, que recebe como parâmetro os dados do Provider */}
-      <UsuarioContext.Consumer>
-        {({ nome, setNome, saldo, setSaldo }) => (
-          <>
-            <Titulo>
-              Insira o seu nome
-            </Titulo>
-            <InputContainer>
-              <InputLabel>
-                Nome
-              </InputLabel>
-              <Input
-                type="text"
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-              />
-            </InputContainer>
-            <InputContainer>
-              <InputLabel>
-                Saldo
-              </InputLabel>
-              <Input
-                type="number"
-                value={saldo}
-                onChange={(e) => setSaldo(e.target.value)}
-                startAdornment={
-                  <InputAdornment position="start">
-                    R$
-                  </InputAdornment>
-                }
-              />
-            </InputContainer>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => navigate('/feira')}
-            >
-              Avançar
-            </Button>
-          </>
-        )}
-      </UsuarioContext.Consumer>
+      {/* Agora que estamos usando o useContext, não precisamos mais usar o UsuarioContext.Consumer */}
+      <>
+        <Titulo>
+          Insira o seu nome
+        </Titulo>
+        <InputContainer>
+          <InputLabel>
+            Nome
+          </InputLabel>
+          <Input
+            type="text"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+          />
+        </InputContainer>
+        <InputContainer>
+          <InputLabel>
+            Saldo
+          </InputLabel>
+          <Input
+            type="number"
+            value={saldo}
+            onChange={(e) => setSaldo(e.target.value)}
+            startAdornment={
+              <InputAdornment position="start">
+                R$
+              </InputAdornment>
+            }
+          />
+        </InputContainer>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => navigate('/feira')}
+        >
+          Avançar
+        </Button>
+      </>
     </Container>
   );
 };
