@@ -28,6 +28,8 @@ function Produto({ nome, foto, id, valor, unidade }) {
       <div>
         <IconButton
           onClick={() => removerProduto(id)}
+          // botão desativado quando não houver produtos adicionados 
+          disabled={!produtoNoCarrinho}
           color="secondary"
         >
           <RemoveIcon />

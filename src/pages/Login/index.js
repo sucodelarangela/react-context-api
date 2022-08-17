@@ -45,6 +45,8 @@ function Login() {
       <Button
         variant="contained"
         color="primary"
+        // validação do nome para seguir para a próxima página
+        disabled={nome.length < 3}
         onClick={() => navigate('/feira')}
       >
         Avançar

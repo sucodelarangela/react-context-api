@@ -1,13 +1,14 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 export const CarrinhoContext = createContext();
 CarrinhoContext.displayName = 'Carrinho';
 
 export const CarrinhoProvider = ({ children }) => {
     const [carrinho, setCarrinho] = useState([]);
+    const [quantidadeProdutos, setQuantidadeProdutos] = useState(0);
 
     return (
-        <CarrinhoContext.Provider value={{ carrinho, setCarrinho }}>
+        <CarrinhoContext.Provider value={{ carrinho, setCarrinho, quantidadeProdutos, setQuantidadeProdutos }}>
             {children}
         </CarrinhoContext.Provider>
     );
@@ -17,7 +18,7 @@ export const CarrinhoProvider = ({ children }) => {
 // criando um custom hook para usar o contexto de carrinho em outros componentes
 export const useCarrinhoContext = () => {
     // pega os states de CarrinhoProvider
-    const { carrinho, setCarrinho } = useContext(CarrinhoContext);
+    const { carrinho, setCarrinho, quantidadeProdutos, setQuantidadeProdutos } = useContext(CarrinhoContext);
 
     // visto que a lógica dentro de adicionarProduto e removerProduto é muito parecida, vamos criar uma função específica para mudar a quantidade dos produtos, que será chamada dentro de cada uma das funções mencionadas
     function mudarQuantidade(id, quantidade) {
@@ -58,13 +59,24 @@ export const useCarrinhoContext = () => {
         setCarrinho(mudarQuantidade(id, -1));
     }
 
+    // mostrando a quantidade de produtos no carrinho. Como é um listener, vamos usar useEffect
+    useEffect(() => {
+        // usaremos o reduce, que fará um loop em cada objeto (produto) e contará as quantidades
+        // reduce recebe dois parâmetros: o contador e o produto. Adicionaremos ao contador (que começa como 0 -> segundo parâmetro do bloco do reduce) e adicionamos a quantidade de cada produto a ele
+        const novaQuantidade = carrinho.reduce((contador, produto) => contador + produto.quantidade, 0);
+        setQuantidadeProdutos(novaQuantidade);
+    }, [carrinho, setQuantidadeProdutos]);
+
+
     console.log(carrinho);
 
     return {
         carrinho,
         setCarrinho,
         adicionarProduto,
-        removerProduto
+        removerProduto,
+        quantidadeProdutos,
+        setQuantidadeProdutos
     };
 };
 
