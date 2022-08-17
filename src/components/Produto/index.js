@@ -1,33 +1,18 @@
 import { Container } from './styles';
-import { memo, useContext } from 'react';
+import { memo } from 'react';
 import { IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
-import { CarrinhoContext } from 'common/context/Carrinho';
+import { useCarrinhoContext } from 'common/context/Carrinho';
 
 
 function Produto({ nome, foto, id, valor, unidade }) {
-  const { carrinho, setCarrinho } = useContext(CarrinhoContext);
+  // substituindo useContext pelo custom hook que criamos
+  // const { carrinho, setCarrinho } = useContext(CarrinhoContext);
+  const { carrinho, adicionarProduto } = useCarrinhoContext();
+  const produtoNoCarrinho = carrinho.find(itemDoCarrinho => itemDoCarrinho.id === id);
 
-  function adicionarProduto(novoProduto) {
-    // validando se já existe o produto no carrinho
-    const temProduto = carrinho.some(itemDoCarrinho => itemDoCarrinho.id === novoProduto.id);
-
-    // se não tiver o produto
-    if (!temProduto) {
-      // o novo produto é adicionado com quantidade = 1
-      novoProduto.quantidade = 1;
-      // retorna um novo array com os itens anteriores mais o novo produto
-      return setCarrinho(carrinhoAnterior => [...carrinhoAnterior, novoProduto]);
-    }
-
-    // se já tiver o produto, seta o carrinho com os itens anteriores e mapeia o produto existente através do id dele
-    setCarrinho(carrinhoAnterior => carrinhoAnterior.map(itemDoCarrinho => {
-      // se os ids forem iguais, retorna item do carrinho com a quantidade atual + 1
-      if (itemDoCarrinho.id === novoProduto.id) itemDoCarrinho.quantidade += 1;
-      return itemDoCarrinho;
-    }));
-  }
+  // a função adicionarProduto irá para o custom hook criado
 
   return (
     <Container>
@@ -46,6 +31,8 @@ function Produto({ nome, foto, id, valor, unidade }) {
         >
           <RemoveIcon />
         </IconButton>
+        {/* O interrogação faz com que a quantidade só retorne se ela tiver algum valor, assim evitamos erros com valor undefined (caso não exista) */}
+        {produtoNoCarrinho?.quantidade || 0}
         <IconButton onClick={() => adicionarProduto({ nome, foto, id, valor })}>
           <AddIcon />
         </IconButton>
