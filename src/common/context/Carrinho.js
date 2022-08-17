@@ -19,6 +19,14 @@ export const useCarrinhoContext = () => {
     // pega os states de CarrinhoProvider
     const { carrinho, setCarrinho } = useContext(CarrinhoContext);
 
+    // visto que a lógica dentro de adicionarProduto e removerProduto é muito parecida, vamos criar uma função específica para mudar a quantidade dos produtos, que será chamada dentro de cada uma das funções mencionadas
+    function mudarQuantidade(id, quantidade) {
+        return carrinho.map(itemDoCarrinho => {
+            if (itemDoCarrinho.id === id) itemDoCarrinho.quantidade += quantidade;
+            return itemDoCarrinho;
+        });
+    }
+
     function adicionarProduto(novoProduto) {
         // validando se já existe o produto no carrinho
         const temProduto = carrinho.some(itemDoCarrinho => itemDoCarrinho.id === novoProduto.id);
@@ -32,11 +40,7 @@ export const useCarrinhoContext = () => {
         }
 
         // se já tiver o produto, seta o carrinho com os itens anteriores e mapeia o produto existente através do id dele
-        setCarrinho(carrinhoAnterior => carrinhoAnterior.map(itemDoCarrinho => {
-            // se os ids forem iguais, retorna item do carrinho com a quantidade atual + 1
-            if (itemDoCarrinho.id === novoProduto.id) itemDoCarrinho.quantidade += 1;
-            return itemDoCarrinho;
-        }));
+        setCarrinho(mudarQuantidade(novoProduto.id, 1));
     }
 
     function removerProduto(id) {
@@ -51,10 +55,7 @@ export const useCarrinhoContext = () => {
             return setCarrinho(carrinhoAnterior => carrinhoAnterior.filter(itemDoCarrinho => itemDoCarrinho.id !== id));
         }
 
-        setCarrinho(carrinhoAnterior => carrinhoAnterior.map((itemDoCarrinho) => {
-            if (itemDoCarrinho.id === id) itemDoCarrinho.quantidade -= 1;
-            return itemDoCarrinho;
-        }));
+        setCarrinho(mudarQuantidade(id, -1));
     }
 
     console.log(carrinho);
