@@ -9,7 +9,7 @@ import { useCarrinhoContext } from 'common/context/Carrinho';
 function Produto({ nome, foto, id, valor, unidade }) {
   // substituindo useContext pelo custom hook que criamos
   // const { carrinho, setCarrinho } = useContext(CarrinhoContext);
-  const { carrinho, adicionarProduto } = useCarrinhoContext();
+  const { carrinho, adicionarProduto, removerProduto } = useCarrinhoContext();
   const produtoNoCarrinho = carrinho.find(itemDoCarrinho => itemDoCarrinho.id === id);
 
   // a função adicionarProduto irá para o custom hook criado
@@ -27,13 +27,17 @@ function Produto({ nome, foto, id, valor, unidade }) {
       </div>
       <div>
         <IconButton
+          onClick={() => removerProduto(id)}
           color="secondary"
         >
           <RemoveIcon />
         </IconButton>
         {/* O interrogação faz com que a quantidade só retorne se ela tiver algum valor, assim evitamos erros com valor undefined (caso não exista) */}
         {produtoNoCarrinho?.quantidade || 0}
-        <IconButton onClick={() => adicionarProduto({ nome, foto, id, valor })}>
+        <IconButton
+          onClick={() => adicionarProduto({ nome, foto, id, valor })}
+          color="primary"
+        >
           <AddIcon />
         </IconButton>
       </div>

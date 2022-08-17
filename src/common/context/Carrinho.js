@@ -39,10 +39,31 @@ export const useCarrinhoContext = () => {
         }));
     }
 
+    function removerProduto(id) {
+        // identificando o produto
+        const produto = carrinho.find((itemDoCarrinho) => itemDoCarrinho.id === id);
+        // identificando se a quantidade do produto é 1 (pois se for 0, precisamos removê-lo por completo do carrinho)
+        const ehUltimo = produto.quantidade === 1;
+
+        // se o item só tiver quantidade = 1
+        if (ehUltimo) {
+            // retorna o carrinho anterior apenas com os itens que tiverem o id diferente do que informamos
+            return setCarrinho(carrinhoAnterior => carrinhoAnterior.filter(itemDoCarrinho => itemDoCarrinho.id !== id));
+        }
+
+        setCarrinho(carrinhoAnterior => carrinhoAnterior.map((itemDoCarrinho) => {
+            if (itemDoCarrinho.id === id) itemDoCarrinho.quantidade -= 1;
+            return itemDoCarrinho;
+        }));
+    }
+
+    console.log(carrinho);
+
     return {
         carrinho,
         setCarrinho,
-        adicionarProduto
+        adicionarProduto,
+        removerProduto
     };
 };
 
