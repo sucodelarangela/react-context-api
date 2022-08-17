@@ -1,5 +1,4 @@
 import { ThemeProvider, createTheme } from '@material-ui/core/styles';
-import { StylesProvider } from '@material-ui/core/styles';
 import { UsuarioProvider } from 'common/context/Usuario';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -20,12 +19,10 @@ const theme = createTheme({
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     {/* O StylesProvider vem do material-ui. A propriedade injectFirst indica que a página primeiro deve inserir o CSS do material-ui e só depois o nosso CSS. Dessa forma, o material-ui não vai sobreescrever os nossos estilos */}
-    <StylesProvider injectFirst>
-      <ThemeProvider theme={theme}>
-        <UsuarioProvider>
-          <Router />
-        </UsuarioProvider>
-      </ThemeProvider>
-    </StylesProvider>
+    <ThemeProvider theme={theme}>
+      <UsuarioProvider>
+        <Router />
+      </UsuarioProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );
