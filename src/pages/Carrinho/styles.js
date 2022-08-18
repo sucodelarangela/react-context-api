@@ -15,6 +15,12 @@ export const Container = styled.main`
     margin: 0 auto;
     width: 50%;
   }
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+  }
   h2 {
     color: ${titleGray};
     font-size: 32px;
@@ -27,7 +33,7 @@ export const Voltar = styled(IconButton).attrs({
   left: 20px;
   position: absolute;
   top: 15px;
-`
+`;
 
 export const TotalContainer = styled.section`
   margin-top: 20px;
@@ -44,8 +50,8 @@ export const TotalContainer = styled.section`
       font-size: 30px;
     }
   }
-`
+`;
 
 export const PagamentoContainer = styled(FormControl)`
   width: 100%;
-`
+`;
