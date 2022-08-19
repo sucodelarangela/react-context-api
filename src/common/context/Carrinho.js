@@ -78,6 +78,7 @@ export const useCarrinhoContext = () => {
     useEffect(() => {
         // usaremos o reduce, que fará um loop em cada objeto (produto) e contará as quantidades
         // reduce recebe dois parâmetros: o contador e o produto. Adicionaremos ao contador (que começa como 0 -> segundo parâmetro do bloco do reduce) e adicionamos a quantidade de cada produto a ele
+        // na refatoração, o reduce lida agora com objetos, pois temos que tratar tanto as quantidades quanto o valor total
         const { novaQuantidade, novoTotal } = carrinho.reduce((contador, produto) => ({
             novaQuantidade: contador.novaQuantidade + produto.quantidade,
             novoTotal: contador.novoTotal + (produto.valor * produto.quantidade)
