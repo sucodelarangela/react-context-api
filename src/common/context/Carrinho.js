@@ -1,4 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import { usePagamentoContext } from './Pagamento';
+import { UsuarioContext } from './Usuario';
 
 export const CarrinhoContext = createContext();
 CarrinhoContext.displayName = 'Carrinho';
@@ -34,6 +36,10 @@ export const useCarrinhoContext = () => {
         valorTotal,
         setValorTotal
     } = useContext(CarrinhoContext);
+
+    const { formaPagamento } = usePagamentoContext();
+
+    const { setSaldo } = useContext(UsuarioContext);
 
     // visto que a lógica dentro de adicionarProduto e removerProduto é muito parecida, vamos criar uma função específica para mudar a quantidade dos produtos, que será chamada dentro de cada uma das funções mencionadas
     function mudarQuantidade(id, quantidade) {
@@ -74,6 +80,12 @@ export const useCarrinhoContext = () => {
         setCarrinho(mudarQuantidade(id, -1));
     }
 
+    // efetuando a compra
+    function efetuarCompra() {
+        setCarrinho([]);
+        setSaldo((saldoAtual => saldoAtual - valorTotal));
+    }
+
     // mostrando a quantidade de produtos no carrinho. Como é um listener, vamos usar useEffect
     useEffect(() => {
         // usaremos o reduce, que fará um loop em cada objeto (produto) e contará as quantidades
@@ -87,11 +99,9 @@ export const useCarrinhoContext = () => {
             novoTotal: 0
         });
         setQuantidadeProdutos(novaQuantidade);
-        setValorTotal(novoTotal);
-    }, [carrinho, setQuantidadeProdutos, setValorTotal]);
-
-
-    console.log(carrinho);
+        // total do carrinho com juros
+        setValorTotal(novoTotal * formaPagamento.juros);
+    }, [carrinho, setQuantidadeProdutos, setValorTotal, formaPagamento]);
 
     return {
         carrinho,
@@ -100,7 +110,8 @@ export const useCarrinhoContext = () => {
         removerProduto,
         quantidadeProdutos,
         setQuantidadeProdutos,
-        valorTotal
+        valorTotal,
+        efetuarCompra
     };
 };
 

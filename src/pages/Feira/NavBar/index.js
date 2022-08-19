@@ -12,7 +12,7 @@ export default function NavBar() {
 
   return (
     <Nav>
-      <Logo />
+      <Logo onClick={() => navigate('/')} />
       <IconButton
         onClick={() => navigate('/carrinho')}
         disabled={quantidadeProdutos === 0}

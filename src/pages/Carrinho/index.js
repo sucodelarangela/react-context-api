@@ -4,19 +4,19 @@ import { useCarrinhoContext } from 'common/context/Carrinho';
 import { usePagamentoContext } from 'common/context/Pagamento';
 import { UsuarioContext } from 'common/context/Usuario';
 import Produto from 'components/Produto';
-import { useContext, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Voltar, TotalContainer, PagamentoContainer } from './styles';
 
 function Carrinho() {
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const { carrinho, valorTotal } = useCarrinhoContext();
+  const { carrinho, valorTotal, efetuarCompra } = useCarrinhoContext();
   // atualizando o saldo do usuário no carrinho. Colocamos o '= 0' para que ele não comece como undefined
   const { saldo } = useContext(UsuarioContext);
-  console.log(saldo);
   const { tiposPagamento, formaPagamento, mudarFormaPagamento } = usePagamentoContext();
   const navigate = useNavigate();
-  const total = saldo - valorTotal;
+  // o useMemo é parecido com o useEffect e vai manter o componente que tem "total" sem re-renderizar, a não ser que "saldo" ou "valorTotal" sofram alteração
+  const total = useMemo(() => saldo - valorTotal, [saldo, valorTotal]);
 
   return (
     <Container>
@@ -60,9 +60,10 @@ function Carrinho() {
         </div>
       </TotalContainer>
       <Button
-        disabled={total < 0}
+        disabled={total < 0 || carrinho.length === 0}
         onClick={() => {
           setOpenSnackbar(true);
+          efetuarCompra();
         }}
         color="primary"
         variant="contained"
@@ -86,7 +87,7 @@ function Carrinho() {
           Compra feita com sucesso!
         </MuiAlert>
       </Snackbar>
-    </Container>
+    </Container >
   );
 }
 
